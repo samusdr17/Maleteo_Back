@@ -1,0 +1,27 @@
+{
+  "name": "fucking_back",
+  "version": "1.0.0",
+  "description": "Back_Maleteo",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "samusdr17"
+  },
+  "author": "Samu",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.6",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.4",
+    "validator": "^13.1.17"
+  }
+}

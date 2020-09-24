@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <form enctype="multipart/form-data" id="profileImageform">
+        <input type="file" name="avatar" />
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        const imageForm = document.getElementById('profileImageform')
+        
+        imageForm.addEventListener('submit', (e) => {
+            e.preventDefault()
+
+            const formData = new FormData(imageForm)
+
+            const userToken = localStorage.getItem("userToken")
+            if(!userToken)
+            {
+                return window.location.href = "/Usuarios/login.html";
+            }
+
+            fetch('/users/profileImage', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    "Authorization": "Bearer " + userToken
+                }
+            })
+            .then(respuesta => {
+                alert("You´re picture is upload")
+                console.log(respuesta.status)
+            })
+            .catch( err => {
+                console.log(err)
+            })
+        })
+    </script>
+</body>
+</html>
