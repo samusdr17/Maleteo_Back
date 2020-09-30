@@ -9,7 +9,7 @@ function registrarUsuario()
     }
 
     // fetch("/users",{
-    //     method: "HEAD",
+    //     method: "GET",
     //     body: JSON.stringify(data),
     //     headers: {
     //       "Accept": "application/json",
@@ -22,7 +22,7 @@ function registrarUsuario()
     // .catch()
 
 
-    fetch("/users/",{
+    fetch("/users",{
         method: "POST",
         body: JSON.stringify(data),
         headers: {

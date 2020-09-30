@@ -32,32 +32,14 @@ let upload = multer({ storage: storage, fileFilter: fileFilter })
 
 const usuarioRouter = express.Router();
 
-usuarioRouter.get('/',  (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    const name = req.body.name;
-    const surname = req.body.surname;
-    const image = req.body.image;
-    const birthday = req.body.birthday;
-
-    bcrypt.hash(password, saltRounds, function(err, hash) {
-        const usuario = new Usuario()
-
-        usuario.email = email;
-        usuario.password = hash;
-        usuario.name = name;
-        usuario.surname = surname;
-        usuario.image = image;
-        usuario.birthday = birthday;
-
-        usuario.save()
-            .then((newUsuario)=> {
-                res.json(newUsuario);
-            })
-            .catch((error)=> {
-                res.status(500).send(error);
-            })
-    });
+usuarioRouter.get('/', (req, res) => {
+    Usuario.find({}, {__v: 0, createdAt: 0, updatedAt: 0})
+        .then((user)=>{
+            res.send(user)
+        })
+        .catch((error)=>{
+            res.status(500).send(error)
+        })
 });
 
 usuarioRouter.post('/',  (req, res) => {
@@ -68,6 +50,8 @@ usuarioRouter.post('/',  (req, res) => {
     const image = req.body.image;
     const birthday = req.body.birthday;
 
+    console.log(req.body)
+
     bcrypt.hash(password, saltRounds, function(err, hash) {
         const usuario = new Usuario()
 
@@ -77,6 +61,8 @@ usuarioRouter.post('/',  (req, res) => {
         usuario.surname = surname;
         usuario.image = image;
         usuario.birthday = birthday;
+
+        console.log(usuario)
 
         usuario.save()
             .then((newUsuario)=> {
@@ -92,7 +78,7 @@ usuarioRouter.get('/login',  (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    Usuario.findOne({ email : email })//Duda?? es buena idea email para la profileImage
+    Usuario.findOne({ email : email })
     .then((user) => {
         if(user)
         {
@@ -180,29 +166,17 @@ usuarioRouter.post('/profileImage', authenticateJWT, upload.single('avatar'), fu
 })
 
 usuarioRouter.delete('/:id',  (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-    const name = req.body.name;
-    const surname = req.body.surname;
-    const image = req.body.image;
-    const birthday = req.body.birthday;
+    const id = req.params.id;
 
-    Usuario.findByIdAndDelete({ email : email })
-    .then((user) => {
-        if(user)
-        {
-            bcrypt.compare(password, user.password, function(err, result) {
-                if(result)
-                {
-                    const accessToken = jwt.sign(
-                        { userID: user._id, email: user.email }, 
-                        process.env.JWT_SECRET);
-                    
-                    delete res.json({ logged : true, token: accessToken})
-                }})
-            
-        }})
-    })
+    Usuario.findByIdAndDelete({ id })
+        .then((usuarioBorrado)=> {
+            res.send({mensaje : `Se ha borrado correctamente el usuario con id ${id}`});
+        })
+        .catch((error)=> {
+            res.status(500).send(error);
+        })
+});
+    
 
     usuarioRouter.put('/:id',  (req, res) => {
         const id = req.params.id;
@@ -217,12 +191,12 @@ usuarioRouter.delete('/:id',  (req, res) => {
         bcrypt.hash(password, saltRounds, (err, hash) => {
             Usuario.findByIdAndUpdate(id, {
     
-            email = email,
-            password = hash,
-            name = name,
-            surname = surname,
-            image = image,
-            birthday = birthday
+            email: email,
+            password: hash,
+            name: name,
+            surname: surname,
+            image: image,
+            birthday: birthday
         })
         .then(()=> {
             return Usuario.findById(id);
