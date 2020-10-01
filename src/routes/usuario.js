@@ -31,7 +31,9 @@ let upload = multer({ storage: storage, fileFilter: fileFilter })
 
 
 const usuarioRouter = express.Router();
+// const guardianRouter = express.Router();
 
+// Este GET es necesario?, o solo sería útil para quien gestione la aplicación?
 usuarioRouter.get('/', (req, res) => {
     Usuario.find({}, {__v: 0, createdAt: 0, updatedAt: 0})
         .then((user)=>{
@@ -42,6 +44,33 @@ usuarioRouter.get('/', (req, res) => {
         })
 });
 
+usuarioRouter.get('/:rol', (req, res)=> {
+    // const id = req.params.id;
+    const rol = req.params.rol.guardian;
+    Usuario.findById(rol, {__v: 0, updatedAt: 0, createdAt: 0})
+        .populate('maleteo_servicio')
+        .exec((err, user) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.send(user)
+            }
+        })
+});
+
+usuarioRouter.get('/:id', (req, res)=> {
+    const id = req.params.id;
+    Usuario.findById(id, {__v: 0, updatedAt: 0, createdAt: 0})
+        .populate('maleteo_servicio')
+        .exec((err, user) => {
+            if (err) {
+                res.status(500).send(err)
+            } else {
+                res.send(user)
+            }
+        })
+});
+
 usuarioRouter.post('/',  (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -49,6 +78,12 @@ usuarioRouter.post('/',  (req, res) => {
     const surname = req.body.surname;
     const image = req.body.image;
     const birthday = req.body.birthday;
+    const maleteo_servicio = req.body.maleteo_servicio;
+    const valoracion = req.body.valoracion;
+    const patena = req.body.patena;
+    const fortin = req.body.fortin;
+    const reservado = req.body.reservado;
+    
 
     console.log(req.body)
 
@@ -61,6 +96,11 @@ usuarioRouter.post('/',  (req, res) => {
         usuario.surname = surname;
         usuario.image = image;
         usuario.birthday = birthday;
+        usuario.maleteo_servicio = maleteo_servicio;
+        usuario.valoracion = valoracion;
+        usuario.patena = patena;
+        usuario.fortin = fortin;
+        usuario.reservado = reservado;
 
         console.log(usuario)
 
@@ -73,6 +113,26 @@ usuarioRouter.post('/',  (req, res) => {
             })
     });
 });
+
+// guardianRouter.post('/', authenticateJWT, (req, res) => {
+    
+
+//     const servicio = new Servicio()
+
+    // servicio.maleteo_servicio = maleteo_servicio;
+    // servicio.valoracion = valoracion;
+    // servicio.patena = patena;
+    // servicio.fortin = fortin;
+    // servicio.reservado = reservado;
+
+//     servicio.save()
+//         .then((newGuardian)=> {
+//             res.json(newGuardian);
+//         })
+//         .catch((error)=> {
+//             res.status(500).send(error);
+//         })
+// });
 
 usuarioRouter.get('/login',  (req, res) => {
     const email = req.body.email;
@@ -212,3 +272,4 @@ usuarioRouter.delete('/:id',  (req, res) => {
 
 
 module.exports = usuarioRouter;
+// module.exports = guardianRouter;

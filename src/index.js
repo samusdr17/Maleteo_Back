@@ -5,7 +5,7 @@ const cors = require('cors')
 
 const homeRoutes = require('./routes/home');
 const usuariosRoutes = require('./routes/usuario');
-const servicioRoutes = require('./routes/servicio');
+const guardianRoutes = require('./routes/guardian');
 const bultosRoutes = require('./routes/bultos');
 require('./db.js');
 
@@ -18,7 +18,7 @@ server.use(cors())
 server.use(express.json());
 server.use(express.urlencoded({extended: false}));
 
-server.use('/servicio', servicioRoutes)
+server.use('/guardian', guardianRoutes)
 server.use('/bultos', bultosRoutes)
 server.use('/users', usuariosRoutes)
 server.use('/', homeRoutes)

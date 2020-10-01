@@ -8,6 +8,9 @@ const bultosSchema = new Schema(
         'num_bultos':{type: String, required: true},
         'fecha_ini':{type: Date},
         'fecha_fin':{type: Date},
+        'guardian_id': {type: String},
+        'usuario_id': {type: String},
+
     },
     {
         'timestamps': true,
